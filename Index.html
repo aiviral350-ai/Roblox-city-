@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>Rise City Life</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+overflow:hidden;
+background:#111827;
+color:#fff;
+}
+
+/* loader */
+#loader{
+position:fixed;
+inset:0;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:linear-gradient(135deg,#050816,#10243f,#09111d);
+z-index:9999;
+}
+
+#loader h1{
+font-size:42px;
+color:#00eaff;
+margin-bottom:16px;
+text-shadow:0 0 20px #00eaff;
+}
+
+#box{
+width:80%;
+max-width:420px;
+height:18px;
+background:#1e293b;
+border-radius:20px;
+overflow:hidden;
+}
+
+#fill{
+width:0%;
+height:100%;
+background:linear-gradient(90deg,#00eaff,#00ff88,#ffd000);
+}
+
+#txt{margin-top:12px}
+
+/* TELEGRAM GATE */
+#gate{
+position:fixed;
+inset:0;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background:rgba(0,0,0,.92);
+z-index:10000;
+text-align:center;
+padding:20px;
+}
+
+#gate h2{font-size:26px;margin-bottom:10px}
+
+#joinBtn{
+margin:15px;
+padding:14px 20px;
+background:#229ED9;
+color:#fff;
+border-radius:12px;
+text-decoration:none;
+font-weight:bold;
+display:inline-block;
+}
+
+#continueBtn{
+padding:14px 20px;
+background:#00ff88;
+border:none;
+border-radius:12px;
+font-weight:bold;
+cursor:pointer;
+}
+
+#warn{margin-top:10px;color:#ff4d4d}
+
+/* game */
+#game{
+display:none;
+width:100%;
+height:100vh;
+position:relative;
+overflow:hidden;
+background:#9ad8ff;
+}
+
+/* top ui */
+#top{
+position:absolute;
+top:10px;
+left:10px;
+right:10px;
+display:flex;
+justify-content:space-between;
+gap:10px;
+z-index:50;
+}
+
+.panel{
+background:rgba(0,0,0,.45);
+padding:10px 14px;
+border-radius:14px;
+font-size:14px;
+line-height:1.6;
+backdrop-filter:blur(6px);
+}
+
+/* world */
+#world{position:absolute;inset:0;overflow:hidden}
+
+.cloud{
+position:absolute;
+top:60px;
+width:110px;
+height:42px;
+background:#fff;
+border-radius:40px;
+opacity:.9;
+}
+
+.build{
+position:absolute;
+bottom:34%;
+width:130px;
+background:#dcecff;
+border:4px solid #c1d7f2;
+border-bottom:none;
+border-radius:6px 6px 0 0;
+}
+
+.window{
+position:absolute;
+width:16px;
+height:22px;
+background:#4f87c9;
+}
+
+/* road */
+#road{
+position:absolute;
+left:0;
+bottom:0;
+width:100%;
+height:34%;
+background:#5b5b5b;
+border-top:8px solid #bbb;
+}
+
+#line{
+position:absolute;
+top:48%;
+width:100%;
+height:8px;
+background:repeating-linear-gradient(to right,#fff 0,#fff 40px,transparent 40px,transparent 80px);
+animation:road .7s linear infinite;
+}
+
+@keyframes road{to{transform:translateX(-80px)}}
+
+/* player */
+#player{
+position:absolute;
+left:90px;
+bottom:118px;
+width:72px;
+height:112px;
+z-index:20;
+transition:.2s;
+}
+
+.head{width:42px;height:42px;background:#f5c49f;margin:auto;border-radius:6px;}
+.body{width:72px;height:44px;background:#ffd000;border-radius:8px;margin-top:2px;}
+.legs{display:flex;justify-content:space-between;}
+.leg{width:28px;height:34px;background:#111;margin-top:2px;border-radius:4px;}
+
+.sword{
+position:absolute;
+right:-55px;
+top:52px;
+width:75px;
+height:10px;
+border-radius:10px;
+background:linear-gradient(90deg,#00eaff,#fff);
+box-shadow:0 0 15px #00eaff;
+transform:rotate(-18deg);
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+<h1>RISE CITY LIFE</h1>
+<div id="box"><div id="fill"></div></div>
+<div id="txt">0%</div>
+</div>
+
+<!-- TELEGRAM GATE -->
+<div id="gate">
+<h2>Join Telegram to Continue</h2>
+
+<a id="joinBtn" href="https://t.me/robloxcityfighter" target="_blank">
+🔵 JOIN CHANNEL
+</a>
+
+<button id="continueBtn">🟢 I HAVE JOINED / PLAY GAME</button>
+
+<div id="warn"></div>
+</div>
+
+<!-- GAME -->
+<div id="game">
+
+<div id="top">
+<div class="panel">
+Level: <span id="lvl">1</span><br>
+XP: <span id="xp">0</span>/<span id="need">100</span><br>
+Coins: <span id="coins">500</span>
+</div>
+
+<div class="panel">
+Cash: $<span id="cash">0.00</span><br>
+Gems: <span id="gems">10</span><br>
+HP: <span id="hp">100</span>
+</div>
+</div>
+
+<div id="world">
+
+<div class="cloud" style="left:10%"></div>
+<div class="cloud" style="left:50%"></div>
+<div class="cloud" style="left:76%"></div>
+
+<div class="build" style="left:0;height:240px"></div>
+<div class="build" style="left:150px;height:210px"></div>
+<div class="build" style="left:320px;height:290px"></div>
+<div class="build" style="right:220px;height:250px"></div>
+<div class="build" style="right:50px;height:230px"></div>
+
+<div id="road"><div id="line"></div></div>
+
+<div id="player">
+<div class="sword"></div>
+<div class="head"></div>
+<div class="body"></div>
+<div class="legs">
+<div class="leg"></div>
+<div class="leg"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+
+/* LOADING */
+let p=0;
+let ld=setInterval(()=>{
+p++;
+fill.style.width=p+"%";
+txt.innerHTML=p+"%";
+
+if(p>=100){
+clearInterval(ld);
+loader.style.display="none";
+gate.style.display="flex";
+}
+},28);
+
+/* TELEGRAM SYSTEM */
+joinBtn.onclick=()=>{
+localStorage.setItem("joinedTelegram","yes");
+warn.innerHTML="✔ Joined saved. Continue now.";
+};
+
+continueBtn.onclick=()=>{
+
+if(!localStorage.getItem("joinedTelegram")){
+warn.innerHTML="❌ You must join Telegram first!";
+return;
+}
+
+gate.style.display="none";
+game.style.display="block";
+makeWindows();
+};
+
+/* BUILD WINDOWS */
+function makeWindows(){
+document.querySelectorAll(".build").forEach(b=>{
+for(let y=18;y<200;y+=34){
+for(let x=14;x<90;x+=28){
+let w=document.createElement("div");
+w.className="window";
+w.style.left=x+"px";
+w.style.top=y+"px";
+b.appendChild(w);
+}
+}
+});
+}
+
+/* GAME CORE VARIABLES */
+let level=1,xp=0,need=100,coins=500,cash=0,gems=10,hp=100;
+
+</script>
+
+</body>
+</html>
